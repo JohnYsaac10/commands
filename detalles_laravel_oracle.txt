@@ -1,0 +1,98 @@
+step 1: uncommented line ico8 in php.ini  xampp
+
+step 2: for laravel 5.3  .....cmd     composer require yajra/laravel-oci8:"5.3.*"
+in composer.json   like package.json
+
+step 2.1: open config/app.php    and add the line   ---   Yajra\Oci8\Oci8ServiceProvider::class
+
+step 3:    cmd  ---   php artisan vendor:publish --tag=oracle
+
+step 4: config/database.php   modify this line      'default'=>env('DB_CONNECTION', 'mysql')   to
+
+step 4:   go to .env   file
+
+DB_CONNECTION=oracle
+DB_HOST=localhost
+DB_PORT=you_port
+
+
+
+***************************************************
+%%%%%%%%vagrant is used for controling vitual machines%%%%%%
+
+install composer    .exe
+------ ARTISAN, is command line interface
+
+composer create-proyect laravel/laravel APIRestful 5.4.*
+php artisan serve --port=8080
+
+------ optional ------
+install virtual box
+
+cmd:   composer require laravel/homestead
+
+
+install homestead
+cmd: vendor\\bin\\homestead make
+
+config file of vagrant: Homestead.yaml  
+
+
+----  create keys  ----
+cmd: shh-keygen-t rsa -b 4096            enter phase: leave empty
+
+-- addressing ---
+
+so that windows knows where to redirect the request
+----go to "hosts" file        c:\Windows\System32\drivers\etc
+
+add this:     155.158.14.16    apirestful.dev
+
+
+cmd: vagrant up      vagrant halt     vagrant destroy         vagrant status
+
+conect to machine: cmd: vagrant ssh
+
+
+#### CHANGE API KEY IN FILE ".ENV"
+	php artisan key:generate
+
+#### CREATE MODELS
+  * vagrant up, vagrant ssh, 
+  * go to project folder and then...  php artisan make:model Buyer
+  * migration        php artisan make:model User -m
+
+#### CREATE CONTROLLERS
+  * vagrant up, vagrant ssh, 
+  * go to project folder and then...
+  * php artisan make:controller User/UserController -r
+
+
+### LIST ROUTES
+(inside virtual machine)  cmd: php artisan route:list
+				GET  |  buyers/create            * don't use, 'cause return forms 
+				GET  |  buyers/{buyer}/edit      * don't use, 'cause return forms
+
+
+Route::resource('buyers', 'Buyer/BuyerController', ['only' => ['index', 'show']]);
+
+Route::resource('categories', 'Category/CategoryController', ['except' => ['create', 'edit']]);
+
+### CREATE A NEW MIGRATION FILE ###
+                                      [file name]                      [table name]     
+cmd in vm: php artisan make:migration category_product_table --create=category_product
+
+
+### ELOCUENT, EL ORM DE LARAVEL
+
+
+
+
+
+
+
+
+
+----- config charset-----
+see file "database.php" , line: " 'charset' => 'utf8mb4' "
+go to file "AppServiceProvider.php" and add this line inside of boot function()  "Schema::defaultStringLength(191)"
